@@ -1,28 +1,79 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
+import RequireAuth from "./auth/RequireAuth";
 
-function App() {
-  return (
-      <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center">
-        <div className="bg-white p-10 rounded-2xl shadow-2xl max-w-md text-center">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            React + Tailwind CSS
-          </h1>
-          <p className="text-gray-600 mb-6">
-            🎉 Установка прошла успешно! 🎉
-          </p>
-          <div className="flex gap-4 justify-center">
-            <button className="bg-indigo-500 text-white px-6 py-2 rounded-lg hover:bg-indigo-600 transition-colors">
-              Начать
-            </button>
-            <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors">
-              Назад
-            </button>
-          </div>
-        </div>
-      </div>
-  );
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+import ProductsPage from "./pages/ProductsPage";
+import MyOrdersPage from "./pages/MyOrdersPage";
+import AdminPanelPage from "./pages/AdminPanelPage";
+
+import SellerOrdersPage from "./pages/SellerOrdersPage";
+import AdminOrdersPage from "./pages/AdminOrdersPage";
+
+export default function App() {
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/login" element={<LoginPage />} />
+
+                <Route
+                    path="/"
+                    element={
+                        <RequireAuth>
+                            <HomePage />
+                        </RequireAuth>
+                    }
+                />
+
+                <Route
+                    path="/products"
+                    element={
+                        <RequireAuth>
+                            <ProductsPage />
+                        </RequireAuth>
+                    }
+                />
+
+                <Route
+                    path="/my-orders"
+                    element={
+                        <RequireAuth roles={["BUYER"]}>
+                            <MyOrdersPage />
+                        </RequireAuth>
+                    }
+                />
+
+                <Route
+                    path="/seller-orders"
+                    element={
+                        <RequireAuth roles={["SELLER"]}>
+                            <SellerOrdersPage />
+                        </RequireAuth>
+                    }
+                />
+
+                <Route
+                    path="/admin"
+                    element={
+                        <RequireAuth roles={["ADMIN"]}>
+                            <AdminPanelPage />
+                        </RequireAuth>
+                    }
+                />
+
+                <Route
+                    path="/admin-orders"
+                    element={
+                        <RequireAuth roles={["ADMIN"]}>
+                            <AdminOrdersPage />
+                        </RequireAuth>
+                    }
+                />
+
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+        </BrowserRouter>
+    );
 }
-
-export default App;
