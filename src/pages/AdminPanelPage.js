@@ -303,7 +303,7 @@ export default function AdminPanelPage() {
     }
 
     // ---------- ADMIN SQL ----------
-    const [sql, setSql] = useState("SELECT id, email, created_at FROM users ORDER BY id;");
+    const [sql, setSql] = useState("SELECT id, email, created_at FROM users ORDER BY id");
     const [sqlLoading, setSqlLoading] = useState(false);
     const [sqlError, setSqlError] = useState("");
     const [sqlData, setSqlData] = useState([]);
