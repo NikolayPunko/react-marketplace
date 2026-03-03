@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import api from "../api/api";
 import PageHeader from "../components/PageHeader";
 
-function StatusBadge({ status }) {
+function StatusBadge({status}) {
     const s = String(status || "").toUpperCase();
 
     const map = {
@@ -38,7 +38,6 @@ function normalizeOrderRow(o) {
 }
 
 function normalizeOrderDetails(d) {
-    // details: {order_id, status, created_at, total_amount, items:{value:"[...]"}}
     let itemsArr = [];
 
     try {
@@ -48,12 +47,16 @@ function normalizeOrderDetails(d) {
         itemsArr = [];
     }
 
+    // delivery может быть null
+    const delivery = d?.delivery || null;
+
     return {
         id: d.order_id,
         status: d.status,
         createdAt: d.created_at,
         totalAmount: d.total_amount,
-        items: itemsArr, // [{productId,name,qty,price}]
+        items: itemsArr,
+        delivery, // {id, address, delivery_status} или null
     };
 }
 
@@ -178,7 +181,7 @@ export default function MyOrdersPage() {
 
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2">
-                                                <StatusBadge status={o.status} />
+                                                <StatusBadge status={o.status}/>
                                                 <span className="text-sm text-slate-500">
                           {fmtDate(o.createdAt)}
                         </span>
@@ -231,7 +234,7 @@ export default function MyOrdersPage() {
                                     <div className="text-sm text-slate-600">
                                         Заказ: <span className="font-semibold">#{details.id}</span>
                                     </div>
-                                    <StatusBadge status={details.status} />
+                                    <StatusBadge status={details.status}/>
                                 </div>
 
                                 <div className="text-sm text-slate-600">
@@ -240,6 +243,30 @@ export default function MyOrdersPage() {
 
                                 <div className="text-sm text-slate-600">
                                     Сумма: <span className="font-semibold">{details.totalAmount ?? "-"}</span>
+                                </div>
+
+                                <div className="border-t pt-3">
+                                    <div className="text-sm font-semibold mb-2">Доставка</div>
+
+                                    <div className="text-sm text-slate-600">
+                                        Статус доставки:{" "}
+                                        <span className="font-semibold">
+                                          {details.delivery?.delivery_status || "—"}
+                                        </span>
+                                    </div>
+
+                                    <div className="text-sm text-slate-600 mt-1">
+                                        Адрес:{" "}
+                                        <span className="font-medium">
+                                          {details.delivery?.address || "—"}
+                                        </span>
+                                    </div>
+
+                                    {!details.delivery && (
+                                        <div className="text-xs text-slate-500 mt-1">
+                                            Для этого заказа запись о доставке ещё не создана.
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div>
@@ -251,12 +278,15 @@ export default function MyOrdersPage() {
                                         <div className="space-y-2">
                                             {details.items.map((it, idx) => (
                                                 <div key={idx} className="border border-slate-200 rounded-xl p-3">
-                                                    <div className="font-medium">{it.name || `productId=${it.productId}`}</div>
+                                                    <div
+                                                        className="font-medium">{it.name || `productId=${it.productId}`}</div>
                                                     <div className="text-sm text-slate-500 mt-1">
                                                         Кол-во:{" "}
-                                                        <span className="font-medium text-slate-700">{it.qty}</span>{" "}
+                                                        <span
+                                                            className="font-medium text-slate-700">{it.qty}</span>{" "}
                                                         • Цена:{" "}
-                                                        <span className="font-medium text-slate-700">{it.price}</span>{" "}
+                                                        <span
+                                                            className="font-medium text-slate-700">{it.price}</span>{" "}
                                                         • Сумма:{" "}
                                                         <span className="font-medium text-slate-700">
                               {Number(it.price || 0) * Number(it.qty || 0)}
