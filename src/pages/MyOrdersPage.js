@@ -298,18 +298,18 @@ export default function MyOrdersPage() {
                                     )}
                                 </div>
 
-                                {["NEW", "CREATED"].includes(String(details.status || "").toUpperCase()) ? (
+                                {/*{["NEW", "CREATED"].includes(String(details.status || "").toUpperCase()) ? (*/}
                                     <button
                                         onClick={() => cancelOrder(details.id)}
                                         className="w-full rounded-xl border border-red-200 text-red-700 py-2 text-sm hover:bg-red-50 transition"
                                     >
                                         Отменить заказ
                                     </button>
-                                ) : (
-                                    <div className="text-xs text-slate-500">
-                                        Отмена доступна только для новых заказов
-                                    </div>
-                                )}
+                                {/*// ) : (*/}
+                                {/*//     <div className="text-xs text-slate-500">*/}
+                                {/*//         Отмена доступна только для новых заказов*/}
+                                {/*//     </div>*/}
+                                {/*// )}*/}
                             </div>
                         )}
                     </div>
