@@ -135,9 +135,25 @@ export default function ProductsPage() {
     const visibleProducts = useMemo(() => {
         const list = tab === "my" ? myProducts : products;
         const q = search.trim().toLowerCase();
-        if (!q) return list;
-        return list.filter((p) => (p.name || "").toLowerCase().includes(q));
+
+        let filtered = list;
+
+        // Фильтруем по поиску
+        if (q) {
+            filtered = filtered.filter((p) => (p.name || "").toLowerCase().includes(q));
+        }
+
+        // Для вкладки "Все товары" скрываем товары с остатком 0
+        if (tab === "all") {
+            filtered = filtered.filter((p) => {
+                const stock = p.stockQuantity ?? p.stock_quantity;
+                return stock > 0;
+            });
+        }
+
+        return filtered;
     }, [tab, products, myProducts, search]);
+
 
     // ---------- корзина ----------
     function addToCart(p) {
@@ -473,12 +489,12 @@ export default function ProductsPage() {
                                             )}
 
                                             {/* SELLER/ADMIN delete */}
-                                            {(isAdmin || (isSeller && tab === "my")) && (
+                                            {(isAdmin || (isSeller && tab === "my")) && (p.stockQuantity >0) && (
                                                 <button
                                                     onClick={() => deleteProduct(p.id)}
                                                     className="rounded-xl border border-red-200 text-red-700 px-3 py-2 text-sm hover:bg-red-50 transition"
                                                 >
-                                                    Удалить
+                                                    Убрать товар из реализации
                                                 </button>
                                             )}
                                         </div>
@@ -638,12 +654,7 @@ export default function ProductsPage() {
                             </div>
                         )}
 
-                        {/* подсказка для ролей */}
-                        {!isBuyer && !isSeller && (
-                            <div className="bg-white rounded-2xl shadow p-4 text-sm text-slate-600">
-                                Эта страница работает лучше, если зайти как BUYER или SELLER.
-                            </div>
-                        )}
+
                     </div>
                 </div>
             </div>

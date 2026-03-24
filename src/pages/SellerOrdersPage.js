@@ -241,10 +241,6 @@ export default function SellerOrdersPage() {
                                     )}
                                 </div>
 
-                                {/* маленькая подсказка */}
-                                <div className="text-xs text-slate-500">
-                                    Здесь отображаются только позиции ваших товаров (это правильно для маркетплейса).
-                                </div>
                             </div>
                         )}
                     </div>

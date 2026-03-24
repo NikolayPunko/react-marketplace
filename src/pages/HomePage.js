@@ -100,10 +100,6 @@ export default function HomePage() {
                     )}
                 </div>
 
-                {/* Hint */}
-                <div className="mt-6 text-xs text-slate-500">
-                    Если кнопка недоступна — значит у текущей роли нет доступа к соответствующему разделу.
-                </div>
             </div>
         </div>
     );
